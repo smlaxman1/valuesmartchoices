@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 
 # Replace with your actual DB credentials
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://<username>:<password>@<host>:3306/valuesmart_db"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://<username>:<password>@localhost:3306/valuesmart_db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
