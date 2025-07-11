@@ -6,11 +6,13 @@ from sqlalchemy.orm import Session
 from typing import List
 from pydantic import BaseModel, EmailStr
 
-from models.product import Product, ProductResponse
+from models.product import  foodProcessingMachinaryResponse, convert_id, \
+    FoodProcessingMachinary_domainSpecificResponse,domainSpecificResponse
 from models.user import User
 from models.EmailRequest import EmailRequest
-from database.dbConnect import get_db
+from database.dbConnect import get_db,  collectionFoodDomainMachinary, collectionFoodProcessingMachinary
 from utils.token import generate_email_token, verify_email_token, get_password_hash, create_access_token
+
 
 app = FastAPI()
 
@@ -45,10 +47,20 @@ def callback(request: Request):
 
 
 
-@app.get("/", response_model=List[ProductResponse])
-def get_products(db: Session = Depends(get_db)):
-    products = db.query(Product).all()
-    return products
+# @app.get("/", response_model=List[ProductResponse])
+# def get_products(db: Session = Depends(get_db)):
+#     products = db.query(Product).all()
+#     return products
+
+
+@app.get("/", response_model=FoodProcessingMachinary_domainSpecificResponse)
+def get_products():
+    products = list(collectionFoodProcessingMachinary.find())  # Query MongoDB
+    foodProcessingMachinaryResponse = [convert_id(p) for p in products]
+    domain= list(collectionFoodDomainMachinary.find())
+    domainSpecificResponse=[convert_id(p) for p in domain]
+    return {"foodProcessingMachinary": foodProcessingMachinaryResponse, "domainSpecific": domainSpecificResponse}
+
 
 
 
